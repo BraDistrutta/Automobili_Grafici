@@ -45,6 +45,35 @@ function onbtnCarica(){
             record.push(colonne);
         }
         console.log(record);
+
+        //Creazione dinamica della tabella: 1,3,5,7,8
+        let tabella = document.createElement("table");
+        let thead = document.createElement("thead");
+        let tbody = document.createElement("tbody");
+        tabella.appendChild(thead);
+        tabella.appendChild(tbody);
+        document.body.appendChild(tabella);
+
+        //Intestazione
+        let intestazione = "<tr>";
+        for(let idColonna in record[0]){
+            if([1,3,5,7,8].includes(parseInt(idColonna)))
+                intestazione += `<th>${record[0][idColonna]}</th>`;
+        }
+        intestazione += "</tr>";
+        thead.innerHTML = intestazione;
+
+        //Dati
+        dati = "";
+        for(let i=1; i< record.length; i++){
+            dati += "<tr>";
+            for(let idcolonna in record[i]){
+                if([1,3,5,7,8].includes(parseInt(idcolonna)))
+                    dati += `<td>${record[i][idcolonna]}</td>`;
+            }
+            dati += "</tr>";
+        }
+        tbody.innerHTML = dati;
     };
 
     //Passo il file e avvio la lettura
