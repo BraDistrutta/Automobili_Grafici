@@ -1,5 +1,5 @@
 var _btnCarica = null;
-var _inputFile = null;
+var _inputFile = null, _main = null;
 
 window.onload = function(){
     _btnCarica = document.getElementsByTagName("button")[0];
@@ -7,6 +7,7 @@ window.onload = function(){
 
     //input[type=file] -> prelevo il primo input di tipo file
     _inputFile = document.querySelector("input[type=file]");
+    _main = document.querySelector("main");
 
 
 };
@@ -52,7 +53,7 @@ function onbtnCarica(){
         let tbody = document.createElement("tbody");
         tabella.appendChild(thead);
         tabella.appendChild(tbody);
-        document.body.appendChild(tabella);
+        _main.appendChild(tabella);
 
         //Intestazione
         let intestazione = "<tr>";
