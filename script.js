@@ -1,7 +1,8 @@
 var _btnCarica = null;
 var _inputFile = null, _main = null;
+var urlBase = window.location.href;
 
-window.onload = function(){
+window.onload = async function(){
     _btnCarica = document.getElementsByTagName("button")[0];
     _btnCarica.addEventListener("click", onbtnCarica);
 
@@ -10,6 +11,14 @@ window.onload = function(){
     _main = document.querySelector("main");
 
 
+    //Proviamo a connetterci al server
+    let busta = await fetch(urlBase + "server/inserisciMezzo.php", {
+        method:"get"
+    });
+
+    //Leggo il contenuto della busta
+    console.log(await busta.json());
+    
 };
 
 function onbtnCarica(){
