@@ -15,6 +15,9 @@
 
 
     //2. Prelevare un dato json che arriva dal client
+    $record = file_get_contents("php://input");
+    $record = json_decode($record);
+    $jObj->record = $record;
 
     //3 Verificare se non esiste già il record
 

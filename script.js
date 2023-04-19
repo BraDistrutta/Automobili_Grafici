@@ -2,23 +2,13 @@ var _btnCarica = null;
 var _inputFile = null, _main = null;
 var urlBase = window.location.href;
 
-window.onload = async function(){
+window.onload = function(){
     _btnCarica = document.getElementsByTagName("button")[0];
     _btnCarica.addEventListener("click", onbtnCarica);
 
     //input[type=file] -> prelevo il primo input di tipo file
     _inputFile = document.querySelector("input[type=file]");
-    _main = document.querySelector("main");
-
-
-    //Proviamo a connetterci al server
-    let busta = await fetch(urlBase + "server/inserisciMezzo.php", {
-        method:"get"
-    });
-
-    //Leggo il contenuto della busta
-    console.log(await busta.json());
-    
+    _main = document.querySelector("main");    
 };
 
 function onbtnCarica(){
@@ -29,7 +19,7 @@ function onbtnCarica(){
 
     let reader = new FileReader();
     //Indico alla libreria chi contattare terminata la lettura
-    reader.onload =  function(datiletti){
+    reader.onload = async function(datiletti){
         //console.log(datiletti);// Oggetto FileReader
         console.log(datiletti.currentTarget.result); //risultati codificati
         let dati = datiletti.currentTarget.result.split("/");
@@ -55,6 +45,17 @@ function onbtnCarica(){
             record.push(colonne);
         }
         console.log(record);
+
+        //Contatto il server
+        //Proviamo a connetterci al server
+        let busta = await fetch(urlBase + "server/inserisciMezzo.php", {
+                method:"post",
+                body:JSON.stringify(record[2])
+            }
+        );
+
+        //Leggo il contenuto della busta
+        console.log(await busta.json());
 
         //Creazione dinamica della tabella: 1,3,5,7,8
         let tabella = document.createElement("table");
