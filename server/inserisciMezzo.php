@@ -20,6 +20,23 @@
     $jObj->record = $record;
 
     //3 Verificare se non esiste già il record
+    $query = "SELECT * 
+        FROM mezzi as m, territori as t, tipidati as td, tipiveicoli as tv
+        WHERE m.idTer = t.idTer AND m.idTipo = td.idTipo AND
+            m.idTipoVeicolo = tv.idTipoVeicolo AND 
+            t.descr = '".$record[1]."' AND  td.descr = '".$record[3]."'
+            AND  tv.descr = '".$record[5]."' AND m.anno = ".$record[7]."
+            AND m.val = ".$record[8];
+    $ris = $conn->query($query);
+    if($ris){
+        $jObj->cod = 0;
+        $jObj->desc = "Query ok";
+        $jObj->risp = $risp->num_rows;
+    }else{
+        $jObj->cod = -1;
+        $jObj->desc = "Errore nella query: ".$conn->error;
+    }
+ 
 
     //4. Costruire la INSERT
 
