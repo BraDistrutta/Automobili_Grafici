@@ -1,6 +1,6 @@
 var _btnCarica = null;
 var _inputFile = null, _main = null;
-var urlBase = window.location.href;
+var urlBase = window.location.href.substring(0,42);
 
 window.onload = function(){
     _btnCarica = document.getElementsByTagName("button")[0];
@@ -8,7 +8,11 @@ window.onload = function(){
 
     //input[type=file] -> prelevo il primo input di tipo file
     _inputFile = document.querySelector("input[type=file]");
-    _main = document.querySelector("main");    
+    _main = document.querySelector("main");
+
+    console.log(urlBase);
+
+    sees();
 };
 
 function onbtnCarica(){
@@ -48,14 +52,16 @@ function onbtnCarica(){
 
         //Contatto il server
         //Proviamo a connetterci al server
-        let busta = await fetch(urlBase + "server/inserisciMezzo.php", {
-                method:"post",
-                body:JSON.stringify(record[2])
-            }
-        );
-
-        //Leggo il contenuto della busta
-        console.log(await busta.json());
+        for(let i=2; i< 10; i++){
+            let busta = await fetch(urlBase + "server/inserisciMezzo.php", {
+                    method:"post",
+                    body:JSON.stringify(record[i])
+                }
+            );
+            //Leggo il contenuto della busta
+            console.log(await busta.json());
+        }
+        //Il server ha già finito o no? Con l'await ha già finito -> poco efficiente
 
         //Creazione dinamica della tabella: 1,3,5,7,8
         let tabella = document.createElement("table");
@@ -89,4 +95,74 @@ function onbtnCarica(){
 
     //Passo il file e avvio la lettura
     reader.readAsDataURL(_inputFile.files[0]);
+}
+
+async function sees(){
+    let zebby = await fetch(urlBase + "server/selectMezzi.php", {
+            method:"get"
+        }
+    );
+
+    let oshimen = await zebby.json();
+    console.log(oshimen);
+
+    let tabella = document.createElement("table");
+    let thead = document.createElement("thead");
+    let tbody = document.createElement("tbody");
+    tabella.appendChild(thead);
+    tabella.appendChild(tbody);
+    _main.appendChild(tabella);
+
+    /*Intestazione
+    let intestazione = "<tr>";
+    for(let idColonna in record[0]){
+        if([1,3,5,7,8].includes(parseInt(idColonna)))
+            intestazione += `<th>${record[0][idColonna]}</th>`;
+    }
+    intestazione += "</tr>";
+    thead.innerHTML = intestazione;
+    */
+    //Dati
+    html = "";
+    for(let i=1; i< oshimen.mezzi.length; i++){
+        html += "<tr>";
+        for(let idcolonna in oshimen.mezzi[i]){
+            html += `<td>${oshimen.mezzi[i][idcolonna]}</td>`;
+        }
+        html += "</tr>";
+    }
+    tbody.innerHTML = html;
+
+    disegnaGrafico(oshimen.mezzi);
+}
+
+function disegnaGrafico(zemel){
+    const data = {
+        labels: [],
+        datasets: [{
+            label: 'Stupid Niqqar',
+            data: [],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(75, 192, 192)',
+                'rgb(255, 205, 86)',
+                'rgb(201, 203, 207)',
+                'rgb(54, 162, 235)'
+            ]
+        }]
+    };
+
+    for(let record of zemel){
+        data.labels.push(record.territorio);
+        //data.datasets.data.push(record.valore)
+    }
+
+    const config = {
+        type: 'polarArea',
+        data: data,
+        options: {}
+    };
+    let canvas = document.createElement("canvas");
+    document.getElementsByTagName("main")[0].appendChild(canvas);
+    let grafico = new Chart(canvas, config);
 }
