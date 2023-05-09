@@ -140,21 +140,32 @@ function disegnaGrafico(zemel){
     const data = {
         labels: [],
         datasets: [{
-            label: 'Stupid Niqqar',
+            label: '',
             data: [],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(75, 192, 192)',
-                'rgb(255, 205, 86)',
-                'rgb(201, 203, 207)',
-                'rgb(54, 162, 235)'
-            ]
+            backgroundColor: []
         }]
     };
 
+    let i = 0;
+    let bgColor = [];
+
     for(let record of zemel){
-        data.labels.push(record.territorio);
-        //data.datasets.data.push(record.valore)
+        if(record.tipoDati == 'parco veicolare'){
+            data.labels.push(record.territorio);
+            /*data.datasets[i] = {
+                label: record.territorio + ': ' + record.valore + ';',
+                data: [record.valore],
+                backgroundColor: 'rgb(' + getRandomInt(255) + ', ' + getRandomInt(255) + ', ' + getRandomInt(255) + ')'
+            }*/
+            bgColor[i] = 'rgb(' + getRandomInt(255) + ', ' + getRandomInt(255) + ', ' + getRandomInt(255) + ')';
+            //data.datasets[0].data.push(Math.log(record.valore).toString());
+            data.datasets[0].data.push(record.valore);
+            //data.datasets[0].label += record.territorio + ': ' + record.valore + '; ';
+            data.datasets[0].backgroundColor.push(bgColor[i]);
+            //data.datasets[0]
+            console.log(data.datasets[i]);
+            i++
+        }
     }
 
     const config = {
@@ -165,4 +176,10 @@ function disegnaGrafico(zemel){
     let canvas = document.createElement("canvas");
     document.getElementsByTagName("main")[0].appendChild(canvas);
     let grafico = new Chart(canvas, config);
+
+    console.log(data);
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
 }
