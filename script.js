@@ -163,7 +163,6 @@ function disegnaGrafico(zemel){
             //data.datasets[0].label += record.territorio + ': ' + record.valore + '; ';
             data.datasets[0].backgroundColor.push(bgColor[i]);
             //data.datasets[0]
-            console.log(data.datasets[i]);
             i++
         }
     }
